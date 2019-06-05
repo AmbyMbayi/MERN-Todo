@@ -4,7 +4,7 @@ const todoRoutes = express.Router();
 
 const Todo = require('../../models/todo');
 
-
+//listing all todos
 todoRoutes.route('/').get(function(req, res){
 	Todo.find(function(err, todos){
 		if(err){
@@ -14,6 +14,19 @@ todoRoutes.route('/').get(function(req, res){
 			res.json(todos);
 		}
 	});
+});
+
+//storing todos
+
+todoRoutes.route('/add').post(function(req, res){
+	let todo = new Todo(req.body);
+	todo.save()
+		.then(todo=>{
+			res.status(200).json({'todo':'todo added successfully'});
+		})
+		.catch(err=>{
+			res.status(400).send('adding new todo failed');
+		});
 });
 
 todoRoutes.route('/:id').get(function(req, res){
@@ -43,16 +56,7 @@ todoRoutes.route('/update/:id').post(function(req, res){
 
 });
 
-todoRoutes.route('/add').post(function(req, res){
-	let todo = new Todo(req.body);
-	todo.save()
-		.then(todo=>{
-			res.status(200).json({'todo':'todo added successfully'});
-		})
-		.catch(err=>{
-			res.status(400).send('adding new todo failed');
-		});
-});
+
 module.exports = todoRoutes;
 
 
